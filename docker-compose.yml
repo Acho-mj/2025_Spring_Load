@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: spring-load-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: spring_load
+      MYSQL_USER: spring_user
+      MYSQL_PASSWORD: spring_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: 
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    networks:
+      - spring-load-network
+  
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-load-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring-load-network
+
+volumes:
+  mysql_data:
+
+networks:
+  spring-load-network:
+    driver: bridge

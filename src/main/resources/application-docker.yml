@@ -1,0 +1,27 @@
+spring:
+  config:
+    activate:
+      on-profile: docker
+  
+  datasource:
+    url: jdbc:mysql://mysql:3307/spring_load?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: spring_user
+    password: spring_pass
+    hikari:
+      maximum-pool-size: 20  # 부하테스트용
+      minimum-idle: 10
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
