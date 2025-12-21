@@ -1,4 +1,4 @@
-package SpringBoot.spring.domain.member.entity;
+package spring.load.domain.member.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
