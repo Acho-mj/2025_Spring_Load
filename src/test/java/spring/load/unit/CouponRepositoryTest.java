@@ -1,10 +1,12 @@
 package spring.load.unit;
 
+import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -51,5 +53,54 @@ public class CouponRepositoryTest {
         member.setEmail("test@test.com");
         member.setName("테스트 유저1");
         return member;
+    }
+
+    @Test
+    @DisplayName("회원 ID로 발급받은 쿠폰을 조회할 수 있다")
+    void 회원ID로_발급받은_쿠폰을_조회할_수_있다() {
+        // Given: 회원이 쿠폰을 발급받았고
+        Coupon coupon = createCoupon("coupon-001", testMember, CouponStatus.ISSUED);
+        couponRepositroy.save(coupon);
+
+        // When: 회원 ID로 조회하면
+        List<Coupon> memberCoupon = couponRepositroy.findByMemberId(testMember.getId());
+
+        // Then: 발급받은 쿠폰이 조회되어야 한다
+        assertThat(memberCoupon).hasSize(1);
+        assertThat(memberCoupon.get(0).getCouponCode()).isEqualTo("coupon-001");
+    }
+
+    @Test
+    @DisplayName("쿠폰 코드로 쿠폰을 조회할 수 있다")
+    void 쿠폰코드로_쿠폰을_조회할_수_있다() {
+        // Given: 발급된 쿠폰이 있고
+        String couponCode = "coupon-002"
+        Coupon coupon = createCoupon(couponCode, testMember, CouponStats.ISSUED);
+        couponRepository.save(coupon);
+
+        // When: 쿠폰 코드로 조회하면
+        Optional<Coupon> foundCoupon = couponRepositroy.findByCouponCode(couponCode);
+        
+        // Then: 해당 쿠폰이 조회되어야 한다
+        asserThat(foundCoupon).isPresent();
+        asserThat(foundCoupon.get().getCouponCode()).isEqualTo(couponCode);
+        asserThat(foundCoupon.getMember().getId()).isEqualTo(testMember.getId());
+    }
+    
+    @Test
+    @DisplayName("중복된 쿠폰 코드는 저장할 수 없다")
+    void 중복된_쿠폰코드는_저장할_수_없다() {
+        // Given: 이미 저장된 쿠폰 코드가 있고
+        String duplicateCouponCode = "coupon-003";
+        Coupon firstCoupon = createCoupon(duplicateCouponCode, testMember, CouponStatus.ISSUED);
+        couponRepository.saveAndFlush(firstCoupon);
+
+        Coupon secondCoupon = createCoupon(duplicateCouponCode, testMember, CouponStatus.ISSUED);
+
+        // When: 동일한 쿠폰 코드로 저장을 시도하면
+        // Then: 예외가 발생해야 한다
+        assertThatThrownBy(() -> couponRepository.saveAndFlush(secondCoupon))
+                .isInstanceOf(DataIntegrityViolationException.class);
+
     }
 }
