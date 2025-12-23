@@ -47,7 +47,7 @@ public class CouponServiceTest {
         Member member = createMember();
         when(memberRepository.findById(1L))
             .thenReturn(Optional.of(member));
-        when(couponRepository.findByMember(1L))
+        when(couponRepository.findByMemberId(1L))
             .thenReturn(List.of());
         when(couponRepository.save(any(Coupon.class)))
             .thenAnswer(invocation -> invocation.getArgument(0));
