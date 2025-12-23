@@ -1,7 +1,5 @@
 package spring.load.unit;
 
-import static org.mockito.Mockito.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -13,10 +11,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import spring.load.domain.coupon.entity.Coupon;
 import spring.load.domain.coupon.entity.CouponStatus;
 import spring.load.domain.coupon.repository.CouponRepository;
+import spring.load.domain.coupon.service.CouponService;
 import spring.load.domain.member.entity.Member;
 import spring.load.domain.member.repository.MemberRepository;
 
