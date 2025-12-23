@@ -83,7 +83,7 @@ public class CouponServiceTest {
         Member member = createMember();
         Coupon existingCoupon = new Coupon();
         existingCoupon.setMember(member);
-        existingCoupon.setStatus(CouponStatus.ISSUED); d
+        existingCoupon.setStatus(CouponStatus.ISSUED);
         
         when(memberRepository.findById(1L))
             .thenReturn(Optional.of(member));
