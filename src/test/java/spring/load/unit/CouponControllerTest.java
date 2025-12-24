@@ -14,6 +14,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import spring.load.domain.coupon.dto.CouponIssueRequest;
 import spring.load.domain.coupon.entity.Coupon;
 import spring.load.domain.coupon.entity.CouponStatus;
 import spring.load.domain.coupon.service.CouponService;
@@ -67,13 +68,13 @@ public class CouponControllerTest {
         when(couponService.issue(1L)).thenReturn(coupon);
 
         // When & Then: 쿠폰 발급을 요청하면
-        mockMvc.perform(post("api/coupons/issue")
+        mockMvc.perform(post("/api/coupons/issue")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").value(1L))
                     .andExpect(jsonPath("$.memberId").value(1L))
-                    .andExpect(jsonPath("$.couponCode").value("coupon-001"))
+                    .andExpect(jsonPath("$.couponCode").value("COUPON-12345678"))
                     .andExpect(jsonPath("$.discountAmount").value(1000L))
                     .andExpect(jsonPath("$.status").value("ISSUED"))
                     .andExpect(jsonPath("$.issuedAt").exists());
@@ -88,7 +89,7 @@ public class CouponControllerTest {
             .thenThrow(new RuntimeException("회원을 찾을 수 없습니다"));
 
         // When & Then: 쿠폰 발급을 요청하면
-        mockMvc.perform(post("api/coupons/issue")
+        mockMvc.perform(post("/api/coupons/issue")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest());
@@ -104,7 +105,7 @@ public class CouponControllerTest {
             .thenThrow(new RuntimeException("이미 쿠폰을 발급받았습니다"));
 
         // When & Then: 쿠폰 발급을 요청하면
-        mockMvc.perform(post("api/coupons/issue")
+        mockMvc.perform(post("/api/coupons/issue")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest());
