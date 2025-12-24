@@ -30,9 +30,45 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring-load-network
+    depends_on:
+      - mysql
+      - prometheus
+  
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: spring-load-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - spring-load-network
+  
+  grafana:
+    image: grafana/grafana:latest
+    container_name: spring-load-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - spring-load-network
+    depends_on:
+      - prometheus
 
 volumes:
   mysql_data:
+  prometheus_data:
+  grafana_data:
 
 networks:
   spring-load-network:
