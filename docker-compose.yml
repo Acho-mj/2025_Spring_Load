@@ -72,6 +72,8 @@ services:
 
 volumes:
   mysql_data:
+  prometheus_data:
+  grafana_data:
 
 networks:
   spring-load-network:
