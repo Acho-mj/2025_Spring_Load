@@ -1,0 +1,33 @@
+// load-test-db 모듈 - DB 부하테스트용 Spring Boot 애플리케이션
+plugins {
+	id 'org.springframework.boot'
+}
+
+dependencies {
+	// common 모듈 의존
+	implementation project(':common')
+	
+	// Spring Boot Starters
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	
+	// Database
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	
+	// Monitoring
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+	
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	
+	// Test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.testcontainers:testcontainers'
+	testImplementation 'org.testcontainers:mysql'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testRuntimeOnly 'com.h2database:h2'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+

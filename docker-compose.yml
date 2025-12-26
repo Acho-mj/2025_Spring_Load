@@ -19,17 +19,56 @@ services:
     networks:
       - spring-load-network
   
-  spring-app:
+  # DB 부하테스트 서비스
+  load-test-db:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: spring-load-app
+      args:
+        MODULE_NAME: load-test-db
+    container_name: spring-load-test-db
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring-load-network
+    depends_on:
+      - mysql
+
+  # Redis 부하테스트 서비스
+  load-test-redis:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_NAME: load-test-redis
+    container_name: spring-load-test-redis
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring-load-network
+    # depends_on:
+    #   - redis  # Redis 서비스 추가 시 활성화
+
+  # MQ 부하테스트 서비스
+  load-test-mq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_NAME: load-test-mq
+    container_name: spring-load-test-mq
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring-load-network
+    # depends_on:
+    #   - rabbitmq  # RabbitMQ 서비스 추가 시 활성화
 
 volumes:
   mysql_data:
