@@ -1,1 +1,7 @@
-rootProject.name = 'spring'
+rootProject.name = 'spring-load-test'
+
+// 멀티 모듈 구조
+include 'common'
+include 'load-test-db'
+include 'load-test-redis'
+include 'load-test-mq'

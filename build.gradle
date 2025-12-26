@@ -1,6 +1,7 @@
+// 루트 프로젝트는 빌드 설정만 관리
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.8'
+	id 'org.springframework.boot' version '3.5.8' apply false
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -8,43 +9,35 @@ group = 'spring.load'
 version = '0.0.1-SNAPSHOT'
 description = 'Spring Load Test'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+// 모든 서브프로젝트에 공통으로 적용될 설정
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'io.spring.dependency-management'
+
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(21)
+		}
 	}
-}
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
+	repositories {
+		mavenCentral()
 	}
-}
 
-repositories {
-	mavenCentral()
-}
+	dependencyManagement {
+		imports {
+			mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+			mavenBom 'org.testcontainers:testcontainers-bom:1.19.3'
+		}
+	}
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
+	}
 
-	compileOnly 'org.projectlombok:lombok'
-
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-
-	annotationProcessor 'org.projectlombok:lombok'
-
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.testcontainers:testcontainers:1.19.3'
-    testImplementation 'org.testcontainers:mysql:1.19.3'
-    testImplementation 'org.testcontainers:junit-jupiter:1.19.3'
-	
-	testRuntimeOnly 'com.h2database:h2'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
+	tasks.named('test') {
+		useJUnitPlatform()
+	}
 }
