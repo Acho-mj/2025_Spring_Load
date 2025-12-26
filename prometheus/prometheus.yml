@@ -3,10 +3,10 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'spring-load-app'
+  - job_name: 'load-test-db'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['spring-app:8080']
+      - targets: ['load-test-db:8080']
         labels:
-          application: 'spring-load'
+          application: 'load-test-db'
 
