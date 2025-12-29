@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CouponIssueRequest {
-    private Long memberId;
-    private Long eventId;
+public class ErrorResponse {
+    private String message;
+    private String errorCode;
 }
 

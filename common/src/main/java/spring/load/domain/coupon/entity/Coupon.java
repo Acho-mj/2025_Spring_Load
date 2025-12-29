@@ -1,12 +1,23 @@
 package spring.load.domain.coupon.entity;
 
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import spring.load.domain.member.entity.Member;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,11 +35,12 @@ public class Coupon {
     @JoinColumn(name="member_id", nullable=false)
     private Member member;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="event_id", nullable=false)
+    private CouponEvent event;
+
     @Column(unique=true, nullable=false)
     private String couponCode;
-
-    @Column(nullable = false)
-    private Long discountAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
