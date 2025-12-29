@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import spring.load.domain.coupon.dto.CouponIssueRequest;
 import spring.load.domain.coupon.dto.CouponIssueResponse;
+import spring.load.domain.coupon.dto.ErrorResponse;
 import spring.load.domain.coupon.entity.Coupon;
 import spring.load.domain.coupon.service.CouponService;
 
@@ -22,16 +23,16 @@ public class CouponController {
     }
 
     @PostMapping("/issue")
-    public ResponseEntity<CouponIssueResponse> issueCoupon(
+    public ResponseEntity<?> issueCoupon(
         @RequestBody CouponIssueRequest request
     ){
         try {
-            Coupon coupon = couponService.issue(request.getMemberId());
+            Coupon coupon = couponService.issue(request.getMemberId(), request.getEventId());
             CouponIssueResponse response = CouponIssueResponse.from(coupon);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), "COUPON_ISSUE_ERROR");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
 }
-

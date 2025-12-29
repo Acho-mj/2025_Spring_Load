@@ -15,7 +15,6 @@ public class CouponIssueResponse {
     private Long id;
     private Long memberId;
     private String couponCode;
-    private Long discountAmount;
     private CouponStatus status;
     private LocalDateTime issuedAt;
 
@@ -24,7 +23,6 @@ public class CouponIssueResponse {
                 coupon.getId(),
                 coupon.getMember().getId(),
                 coupon.getCouponCode(),
-                coupon.getDiscountAmount(),
                 coupon.getStatus(),
                 coupon.getIssuedAt()
         );
