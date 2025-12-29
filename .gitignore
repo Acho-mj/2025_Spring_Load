@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### JMeter ###
+jmeter.log
+load-test-db/results/
+*.jtl
